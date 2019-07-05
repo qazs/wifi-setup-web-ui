@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="axios.min.js"></script>
   <style>
     html, body { height: 100vh; padding: 0; margin: 0;}
@@ -12,21 +13,43 @@
       color: white; padding: 0.4em 1em; border-radius: 0.3em;
       border: none; cursor: pointer;
     }
-    input[type=text] {
-      padding: 0.2em 0.7em; position: relative;
-      border: 1px solid #cdcdcd; border-color: rgba(0, 0, 0, .15);
-      background-color: white; font-size: 16px;
+    input[type=text],
+    input[type=password] {
+      padding: 5px 10px;
+      border: 1px solid #eee;
+      background-color: #fafafa;
+      border-radius: 3px;
     }
-    h1 { margin: 0; padding-top: 0.5em; text-align: center; }
-    .container { padding: 0 1em; margin: 1em auto; max-width: 480px; background: #fafafa; }
-    .form-control { margin: 0.5em 0; }
+    h1 {
+      margin: 0;
+      text-align: center;
+      font-weight: normal;;
+    }
+    .container {
+      text-align: center;
+      margin-top: 50px;
+    }
+    .form-control {
+      margin-bottom: 1em;
+    }
     .form-control input, .form-control button { min-width: 15em; }
-    .form label { min-width: 8em; display: inline-block; }
-    .form { padding: 1em 0; }
-    .btn { background: #2079b0; }
+    .form label {
+      min-width: 8em;
+      display: block;
+      text-align: left;
+    }
+    .form {
+      display: inline-block;
+      padding: 1em 0;
+      max-width: 320px;
+    }
+    .btn {
+      background: #cc0000;
+      margin-top: 1em;
+    }
     .spin {
       display: inline-block; width: 0.9em; height: 0.9em;
-      margin-bottom: -0.2em; 
+      margin-bottom: -0.2em;
       border: 0.15em solid rgba(255,255,255,.5);
       border-radius: 50%;
       border-top-color: #fff;
@@ -39,22 +62,21 @@
   </head>
   <body>
     <div class="container">
-      <h1 class="">WiFi setup</h1>
+      <h1 class="">WIFI 设置</h1>
       <div class="form">
         <div class="">
           <div class="form-control">
-            <label>WiFi network:</label>
+            <label>网络:</label>
             <input type="text" id="ssid">
           </div>
           <div class="form-control">
-            <label>WiFi password:</label>
-            <input type="text" id="pass">
+            <label>密码:</label>
+            <input type="password" id="pass">
           </div>
           <div class="form-control">
-            <label></label>
             <button class="btn" id="save">
               <span id="spinner"></span>
-              Save WiFi settings
+              保存设置
             </button>
           </div>
         </div>
