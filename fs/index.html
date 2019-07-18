@@ -1,105 +1,209 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="zh">
+
+<head>
+  <title>设备设置</title>
+  <meta charset="utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <script src="axios.min.js"></script>
   <style>
-    html, body { height: 100vh; padding: 0; margin: 0;}
-    * { outline: none !important; }
-    body { color: #454955; font: 15px/1.5 Verdana, Helvetica, Arial, sans-serif; }
-    h1, h2, h3, h4, h5, h6, b, th, strong, .nav-link { color: #777; }
-    input, button, div, pre, p { font: inherit; }
-    button {
-      color: white; padding: 0.4em 1em; border-radius: 0.3em;
-      border: none; cursor: pointer;
+    html,
+    body {
+      height: 100vh;
+      padding: 0;
+      margin: 0;
     }
+
+    * {
+      outline: none !important;
+    }
+
+    body {
+      color: #454955;
+      font: 15px/1.5 Verdana, Helvetica, Arial, sans-serif;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    b,
+    th,
+    strong,
+    .nav-link {
+      color: #777;
+    }
+
+    input,
+    button,
+    div,
+    pre,
+    p {
+      font: inherit;
+    }
+
+    button {
+      color: white;
+      padding: 0.4em 1em;
+      border-radius: 0.3em;
+      border: none;
+      cursor: pointer;
+    }
+
     input[type=text],
     input[type=password] {
       padding: 5px 10px;
-      border: 1px solid #eee;
-      background-color: #fafafa;
-      border-radius: 3px;
+      border: none;
+      background: none;
+      width: 100%;
+      /* background-color: #fafafa; */
+      /* border-radius: 3px; */
     }
+
     h1 {
       margin: 0;
       text-align: center;
-      font-weight: normal;;
+      font-weight: normal;
+      ;
     }
+
     .container {
       text-align: center;
-      margin-top: 50px;
+      margin-top: 10px;
+      padding: 50px;
     }
+
     .form-control {
-      margin-bottom: 1em;
+      margin: 1em 0;
     }
-    .form-control input, .form-control button { min-width: 15em; }
+
+    .form-control .input-wrapper{
+      border:1px solid #ccc;
+      border-radius: 2px;
+      background: #fafafa;
+    }
+
+    .form-control .input-wrapper,
+    .form-control button{
+      /* min-width: 15em; */
+      width: 100%;
+    }
+
     .form label {
       min-width: 8em;
       display: block;
       text-align: left;
     }
+
     .form {
       display: inline-block;
-      padding: 1em 0;
+      width: 100%;
       max-width: 320px;
+      margin-top: 20px;
     }
+
     .btn {
-      background: #cc0000;
+      background: #00ccb0;
       margin-top: 1em;
+      height: 40px;
     }
+
     .spin {
-      display: inline-block; width: 0.9em; height: 0.9em;
+      display: inline-block;
+      width: 0.9em;
+      height: 0.9em;
       margin-bottom: -0.2em;
-      border: 0.15em solid rgba(255,255,255,.5);
+      border: 0.15em solid rgba(255, 255, 255, .5);
       border-radius: 50%;
       border-top-color: #fff;
       animation: spin 1s linear infinite;
       -webkit-animation: spin 1s linear infinite;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @-webkit-keyframes spin { to { -webkit-transform: rotate(360deg); } }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @-webkit-keyframes spin {
+      to {
+        -webkit-transform: rotate(360deg);
+      }
+    }
   </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1 class="">WIFI 设置</h1>
-      <div class="form">
-        <div class="">
-          <div class="form-control">
-            <label>网络:</label>
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="">设备设置</h1>
+    <div class="form">
+      <div class="">
+        <div class="form-control">
+          <label>网络:</label>
+          <div class="input-wrapper">
             <input type="text" id="ssid">
           </div>
-          <div class="form-control">
-            <label>密码:</label>
-            <input type="password" id="pass">
+        </div>
+        <div class="form-control">
+          <label>密码:</label>
+          <div class="input-wrapper">
+            <input type="text" id="pass">
           </div>
-          <div class="form-control">
-            <button class="btn" id="save">
+        </div>
+        <div class="form-control">
+          <button class="btn" id="save">
               <span id="spinner"></span>
               保存设置
             </button>
-          </div>
         </div>
       </div>
     </div>
+  </div>
 
   <script>
+    var setup = false;
     var saveButton = document.getElementById('save');
     var spinnerSpan = document.getElementById('spinner');
+
+    function getConfirmation() {
+      alert('网络和密码不能为空');
+      return false;
+      var retVal = confirm("有空格，是否继续？");
+      return retVal ? true : false;
+    }
+
     saveButton.onclick = function() {
+      if(setup) return alert("设备已设置完毕");
+      var ssid = document.getElementById('ssid').value.trim();
+      var pass = document.getElementById('pass').value.trim();
+      if (ssid == '' || pass == '') return alert('网络和密码不能为空');
+      if(pass.length < 5) return alert('密码太短');
       spinnerSpan.className = 'spin';
-      var ssid = document.getElementById('ssid').value || '';
-      var pass = document.getElementById('pass').value || '';
       var data = {
         config: {
           wifi: {
-            sta: { enable: true, ssid: ssid, pass: pass},
-            ap: { enable: false }
+            sta: {
+              enable: true,
+              ssid: ssid,
+              pass: pass
+            },
+            ap: {
+              enable: false
+            }
           }
         }
       };
       axios.post('/rpc/Config.Set', data).then(function(res) {
-        return axios.post('/rpc/Config.Save', {reboot: true});
+        axios.post('/rpc/Config.Save', {
+          reboot: true
+        }).then(function(res){
+          setup = true;
+          alert("网络已设置，设备重启中");
+        });
       }).catch(function(err) {
         alert(err);
       }).then(function() {
@@ -108,5 +212,6 @@
     };
   </script>
 
-  </body>
+</body>
+
 </html>
